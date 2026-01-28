@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Care & First Aid Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Quicksand:wght@500;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #FFB7C5;
+            --secondary-blue: #A7D8DE;
+            --accent-yellow: #FFF4E0;
+            --danger-red: #FF6B6B;
+            --success-green: #51CF66;
+            --text-dark: #4A4A4A;
+            --bg-light: #FFFBFA;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Quicksand', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* 語言切換浮動選單 */
+        .lang-switcher {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            display: flex;
+            gap: 5px;
+            background: rgba(255,255,255,0.8);
+            padding: 8px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-pink);
+            color: white;
+        }
+
+        /* 核心橫幅設計：確保 1392x768 完整顯示 */
+        .banner-wrapper {
+            width: 100%;
+            max-width: 1392px; /* 圖片最大寬度 */
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .banner-image {
+            width: 100%;
+            aspect-ratio: 1392 / 768; /* 強制依照圖片原比例 */
+            background: url('OS.jpg') center top / contain no-repeat;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* 標題浮動卡片 */
+        .title-card {
+            background: white;
+            padding: 20px 40px;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(216, 130, 157, 0.15);
+            max-width: 600px;
+            margin: -40px auto 30px; /* 向上偏移，產生堆疊層次感 */
+            position: relative;
+            z-index: 10;
+            border: 2px solid var(--accent-yellow);
+        }
+
+        .title-card h1 { color: #D8829D; font-size: 1.8rem; margin-bottom: 5px; }
+        .title-card p { font-size: 0.9rem; color: #888; }
+
+        /* 內容容器 */
+        .container { max-width: 1000px; margin: 0 auto 50px; padding: 0 20px; }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 2px solid var(--secondary-blue);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--secondary-blue);
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--secondary-blue);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(167, 216, 222, 0.4);
+        }
+
+        /* 卡片設計 */
+        .content-card {
+            background: white;
+            border-radius: 35px;
+            padding: 40px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.04);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .box { padding: 25px; border-radius: 25px; position: relative; }
+        .do-box { background: #F6FFF8; border: 1.5px solid #D1EAD9; }
+        .dont-box { background: #FFF9F9; border: 1.5px solid #FAD7D7; }
+
+        .box h3 { margin-bottom: 15px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        ul { list-style: none; }
+        li { margin-bottom: 10px; padding-left: 20px; position: relative; }
+        li::before { content: "•"; position: absolute; left: 0; font-weight: bold; }
+
+        /* 響應式 */
+        @media (max-width: 768px) {
+            .action-grid { grid-template-columns: 1fr; }
+            .title-card { width: 85%; padding: 15px 25px; }
+            .title-card h1 { font-size: 1.4rem; }
+        }
+
+        footer { text-align: center; padding: 40px; color: #BBB; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="changeLang('zh')">中文</button>
+        <button class="lang-btn" onclick="changeLang('en')">EN</button>
+        <button class="lang-btn" onclick="changeLang('jp')">日本語</button>
+        <button class="lang-btn" onclick="changeLang('es')">ES</button>
+    </div>
+
+    <div class="banner-wrapper">
+        <div class="banner-image"></div>
+    </div>
+
+    <div class="title-card">
+        <h1 id="mainTitle">安心守護：急救指南</h1>
+        <p id="subTitle">針對老人與小孩的日常防護</p>
+    </div>
+
+    <div class="container">
+        <nav class="nav-tabs" id="navTabs"></nav>
+        <main class="content-card" id="contentCard"></main>
+    </div>
+
+    <script>
+        const data = {
+            zh: {
+                title: "安心守護：急救指南",
+                subtitle: "正確處置，守護最愛的人",
+                tabs: ["口腔戳傷", "魚刺梗塞", "哈姆立克"],
+                content: [
+                    { title: "🍓 吸管與口腔戳傷", desc: "常發生於邊走邊喝水的小孩或分心的成年人。", do: ["保持冷靜，檢查呼吸", "淺層傷口用涼水漱口", "若有深層異物，維持原狀立即就醫"], dont: ["強行拔除深刺異物", "吞服不明藥粉", "用手指挖掘傷口"] },
+                    { title: "🐟 魚刺卡喉嚨", desc: "台灣飲食特色中常見的意外，應打破迷信。", do: ["停止進食動作", "輕輕咳嗽嘗試排出", "諮詢耳鼻喉科專業取針"], dont: ["吞飯、吞饅頭（危險！）", "大量喝醋（無效且傷胃）", "手指亂挖導致黏膜受損"] },
+                    { title: "🚑 哈姆立克法", desc: "當患者無法說話、咳嗽且臉色發紫時。", do: ["站在患者後方向上向內推擠", "嬰幼兒採背部拍擊法", "持續施救直至異物排出並求救"], dont: ["患者還能咳嗽時強行拍背", "餵水嘗試強行沖下異物"] }
+                ]
+            },
+            en: {
+                title: "Global Care: First Aid",
+                subtitle: "Smart Response for Seniors & Kids",
+                tabs: ["Oral Injury", "Choking", "Heimlich"],
+                content: [
+                    { title: "🍓 Straw & Oral Puncture", desc: "Common in distracted adults and active children.", do: ["Check airway immediately", "Rinse with cool clean water", "Seek ER if bleeding is heavy"], dont: ["Pulling out deep objects at home", "Blind 'finger sweeps'", "Applying any powder or ointment"] },
+                    { title: "🥩 Choking / Obstruction", desc: "Common with firm foods like nuts, grapes, or steak.", do: ["Encourage strong coughing", "Monitor breathing sounds", "Call 911/999 if whistling sound occurs"], dont: ["Drinking water to push it down", "Slapping back if they can still cough", "Giving bread to 'swallow it down'"] },
+                    { title: "🚑 Heimlich Maneuver", desc: "The universal choking sign: Hands to throat.", do: ["Abdominal thrusts for adults", "Back blows for infants under 1 year", "Call emergency services immediately"], dont: ["Waiting too long to act", "Laying the person flat on the floor"] }
+                ]
+            },
+            jp: {
+                title: "安心守り：救急ガイド",
+                subtitle: "高齢者とお子様のための安全知識",
+                tabs: ["口腔損傷", "餅/異物詰まり", "ハイムリック"],
+                content: [
+                    { title: "🍓 ストロー・口内穿刺", desc: "歩きスマホや介護現場で多発している事故です。", do: ["呼吸ができるか最優先で確認", "清潔な冷水で軽くうがい", "深く刺さった場合はそのまま病院へ"], dont: ["無理に刺さった物を抜く", "患部を指で触る", "民間療法で薬を塗る"] },
+                    { title: "🍡 餅・魚の骨の詰まり", desc: "お正月や和食時に多い事故。早めの判断が命を救います。", do: ["しっかり咳をさせる", "掃除機の専用ノズルを準備", "迷わず119番通報する"], dont: ["ご飯を丸呑みする（逆効果）", "お酢を飲んで骨を溶かそうとする", "パニックで水を大量に飲ませる"] },
+                    { title: "🚑 ハイムリック法", desc: "喉に詰まって声が出せない時の「突き上げ法」。", do: ["背部叩打法をまず試す", "後ろから腹部を強く押し上げる", "救急隊の到着まで続ける"], dont: ["意識がない人に腹部突き上げを行う", "逆さまにして激しく振る"] }
+                ]
+            },
+            es: {
+                title: "Guía de Primeros Auxilios",
+                subtitle: "Protección familiar y cuidado diario",
+                tabs: ["Lesión Oral", "Atragantamiento", "Heimlich"],
+                content: [
+                    { title: "🍓 Punción Bucal", desc: "Riesgos en fiestas con pajitas o palillos de brocheta.", do: ["Mantener la calma y revisar respiración", "Enjuagar suavemente con agua fría", "Si hay objeto clavado, ir directo a urgencias"], dont: ["Intentar sacar objetos profundos", "Poner polvos o pomadas en la herida", "Tocar el área con manos sucias"] },
+                    { title: "🍖 Atragantamiento", desc: "Común con huesos de carne o semillas de aceituna.", do: ["Animar a la persona a toser fuerte", "Llamar al 112 / 911 de inmediato", "Mantener a la persona erguida"], dont: ["Dar migajón de pan", "Beber mucha agua o aceite", "Dar golpes si la persona aún puede toser"] },
+                    { title: "🚑 Maniobra de Heimlich", desc: "Señal de auxilio: Manos apretando el cuello.", do: ["Compresiones abdominales rítmicas", "Golpes en la espalda para bebés", "Actuar con decisión y rapidez"], dont: ["Abandonar a la persona sola", "Dejar de actuar antes de que llegue ayuda"] }
+                ]
+            }
+        };
+
+        let currentLang = 'zh';
+        let currentIdx = 0;
+
+        function render() {
+            const langData = data[currentLang];
+            document.getElementById('mainTitle').innerText = langData.title;
+            document.getElementById('subTitle').innerText = langData.subtitle;
+
+            const nav = document.getElementById('navTabs');
+            nav.innerHTML = '';
+            langData.tabs.forEach((tab, i) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${i === currentIdx ? 'active' : ''}`;
+                btn.innerText = tab;
+                btn.onclick = () => { currentIdx = i; render(); };
+                nav.appendChild(btn);
+            });
+
+            const card = document.getElementById('contentCard');
+            const item = langData.content[currentIdx];
+            const labels = {
+                zh: ["✅ 正確做法", "❌ 錯誤禁忌"],
+                en: ["✅ Correct Actions", "❌ Do Not Do"],
+                jp: ["✅ 正しい処置", "❌ 禁止事項"],
+                es: ["✅ Qué Hacer", "❌ Qué No Hacer"]
+            };
+
+            card.innerHTML = `
+                <div style="border-bottom: 2px dashed #FFEFBA; padding-bottom: 20px; margin-bottom: 20px;">
+                    <h2 style="color: #5A5A5A; margin-bottom: 10px;">${item.title}</h2>
+                    <p style="color: #777; font-size: 0.95rem;">${item.desc}</p>
+                </div>
+                <div class="action-grid">
+                    <div class="box do-box">
+                        <h3>${labels[currentLang][0]}</h3>
+                        <ul>${item.do.map(text => `<li>${text}</li>`).join('')}</ul>
+                    </div>
+                    <div class="box dont-box">
+                        <h3>${labels[currentLang][1]}</h3>
+                        <ul>${item.dont.map(text => `<li>${text}</li>`).join('')}</ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeLang(lang) {
+            currentLang = lang;
+            currentIdx = 0;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.toLowerCase().includes(lang) || (lang === 'zh' && btn.innerText === '中文'));
+            });
+            render();
+        }
+
+        render();
+    </script>
+</body>
+</html>
